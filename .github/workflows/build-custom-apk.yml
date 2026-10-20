@@ -1,12 +1,15 @@
-name: Build Custom RethinkDNS APK
+name: Build & Release Custom RethinkDNS
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # Allows manual run button
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,9 +38,21 @@ jobs:
       - name: Build Website Flavor (Full Local Engine)
         run: ./gradlew assembleWebsiteDebug --stacktrace
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
+      - name: Prepare APK Asset
+        id: prep
+        run: |
+          TAG_NAME="v$(date +'%Y.%m.%d-%H%M')"
+          APK_PATH=$(ls app/build/outputs/apk/website/debug/*.apk | head -n 1)
+          cp "$APK_PATH" "rethinkdns-custom.apk"
+          echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
+
+      - name: Publish to GitHub Releases
+        uses: softprops/action-gh-release@v2
         with:
-          name: rethinkdns-custom-package
-          path: app/build/outputs/apk/website/debug/*.apk
-          
+          tag_name: ${{ steps.prep.outputs.tag }}
+          name: RethinkDNS Custom Build ${{ steps.prep.outputs.tag }}
+          draft: false
+          prerelease: false
+          files: rethinkdns-custom.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
