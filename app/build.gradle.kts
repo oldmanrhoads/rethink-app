@@ -158,10 +158,10 @@ val hasTvReleaseSigningConfig =
 android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     // https://developer.android.com/studio/build/configure-app-module
-    namespace = "com.celzero.bravedns.oldmanrhoads"
+    namespace = "com.celzero.bravedns"
 
     defaultConfig {
-        applicationId = "com.celzero.bravedns"
+        applicationId = "com.celzero.bravedns.oldmanrhoads"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
