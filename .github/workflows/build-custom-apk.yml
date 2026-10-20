@@ -1,0 +1,43 @@
+name: Build Custom RethinkDNS APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allows manual run button
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Java Development Kit
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant Execute Permission to Gradlew
+        run: chmod +x gradlew
+
+      - name: Build Website Flavor (Full Local Engine)
+        run: ./gradlew assembleWebsiteDebug --stacktrace
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rethinkdns-custom-package
+          path: app/build/outputs/apk/website/debug/*.apk
+          
