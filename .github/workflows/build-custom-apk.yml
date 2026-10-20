@@ -35,14 +35,14 @@ jobs:
       - name: Grant Execute Permission to Gradlew
         run: chmod +x gradlew
 
-      - name: Build Website Flavor (Full Local Engine)
-        run: ./gradlew assembleWebsiteDebug --stacktrace
+      - name: Build Website Full Flavor (Phone + Offline Blocklists)
+        run: ./gradlew assembleWebsiteFullDebug --stacktrace
 
       - name: Prepare APK Asset
         id: prep
         run: |
           TAG_NAME="v$(date +'%Y.%m.%d-%H%M')"
-          APK_PATH=$(ls app/build/outputs/apk/website/debug/*.apk | head -n 1)
+          APK_PATH=$(find app/build/outputs/apk/websiteFull/debug/ -name "*.apk" | head -n 1)
           cp "$APK_PATH" "rethinkdns-custom.apk"
           echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
 
@@ -56,3 +56,4 @@ jobs:
           files: rethinkdns-custom.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
