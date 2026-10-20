@@ -158,7 +158,7 @@ val hasTvReleaseSigningConfig =
 android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     // https://developer.android.com/studio/build/configure-app-module
-    namespace = "com.celzero.bravedns"
+    namespace = "com.celzero.bravedns.oldmanrhoads"
 
     defaultConfig {
         applicationId = "com.celzero.bravedns"
